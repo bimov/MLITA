@@ -1,4 +1,4 @@
-from main import send_message
+from OpenRouterChat import send_message
 
 # ==== Системный промпт ====
 SYSTEM_PROMPT = """Ты — экспертный ассистент по формальной логике. 
