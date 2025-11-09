@@ -20,6 +20,7 @@ def test_full_conversion_simple():
         print(f"  {i}. {clause}")
     print()
 
+
 def test_full_conversion_nested_quantifiers():
     print("=== Тест 2: Вложенные кванторы ===")
     
@@ -39,6 +40,7 @@ def test_full_conversion_nested_quantifiers():
     for i, clause in enumerate(clauses, 1):
         print(f"  {i}. {clause}")
     print()
+
 
 def test_full_conversion_complex():
     print("=== Тест 3: Сложная формула с импликацией ===")
@@ -62,6 +64,7 @@ def test_full_conversion_complex():
         print(f"  {i}. {clause}")
     print()
 
+
 def test_full_conversion_with_negation():
     print("=== Тест 4: Формула с отрицанием ===")
     
@@ -81,6 +84,7 @@ def test_full_conversion_with_negation():
     for i, clause in enumerate(clauses, 1):
         print(f"  {i}. {clause}")
     print()
+
 
 def test_full_conversion_disjunction():
     print("=== Тест 5: Дизъюнкция с кванторами ===")
@@ -103,6 +107,7 @@ def test_full_conversion_disjunction():
         print(f"  {i}. {clause}")
     print()
 
+
 def test_full_conversion_multiple_universal():
     print("=== Тест 6: Несколько универсальных кванторов ===")
     
@@ -122,6 +127,7 @@ def test_full_conversion_multiple_universal():
     for i, clause in enumerate(clauses, 1):
         print(f"  {i}. {clause}")
     print()
+
 
 if __name__ == "__main__":
     test_full_conversion_simple()

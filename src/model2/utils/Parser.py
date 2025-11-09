@@ -8,6 +8,7 @@ class Parser:
         self.quantifiers = [quantifier.value for quantifier in Quantifiers]
         variables.clear()
 
+
     def parse_input(self, input_data: Union[str, None]):
         if input_data is None:
             return None                             #TODO

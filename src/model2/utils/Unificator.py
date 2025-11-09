@@ -6,6 +6,7 @@ class Unificator:
     def __init__(self):
         pass
 
+
     def unify_atoms(self, first: Atom, second: Atom, replaces = None):
         if replaces is None:
             replaces = {}
@@ -21,7 +22,6 @@ class Unificator:
             return first, second, replaces
 
         for i in range(len(first_values)):
-            # Применяем существующие подстановки
             if isinstance(first_values[i], str) and first_values[i] in replaces:
                 first_values[i] = replaces[first_values[i]]
             if isinstance(second_values[i], str) and second_values[i] in replaces:
@@ -118,6 +118,7 @@ class Unificator:
 
         return None, None, replaces
 
+
     def _extract_atoms(self, formula: Formula):
         atoms = []
 
@@ -140,6 +141,7 @@ class Unificator:
 
         return atoms
 
+
     def _apply_substitution_to_formula(self, formula: Formula, substitution):
         if isinstance(formula, AtomicFormula):
             new_atom = self._apply_substitution_to_atom(formula.atom, substitution)
@@ -155,6 +157,7 @@ class Unificator:
             return BinaryFormula(new_left, formula.connective, new_right)
 
         return formula
+
 
     def _apply_substitution_to_atom(self, atom: Atom, substitution):
         new_values = []
