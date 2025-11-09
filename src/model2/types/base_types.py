@@ -6,8 +6,8 @@ class LogicalConnectives(Enum):
     AND = '∧'
     OR = '∨'
     XOR = "⊕"
-    THEN = "→"     
-    IFF = "↔" 
+    THEN = "→"
+    IFF = "↔"
 
     @classmethod
     def get(self, value: str):
@@ -28,7 +28,24 @@ class Quantifiers(Enum):
         if value == '∃': return Quantifiers.EXISTENCE
 
 
-variables = []
+class Variables:
+    _variables = []
+
+    @classmethod
+    def append(cls, var: str):
+        cls._variables.append(var)
+
+    @classmethod
+    def __contains__(cls, var: str):
+        return var in cls._variables
+
+    @classmethod
+    def clear(cls):
+        cls._variables = []
+
+
+variables = Variables()
+
 
 class Atom:
     def __init__(self, func: str, values: Union[list[str], str, list['Atom'], 'Atom', list[Union[str, 'Atom']]]):
@@ -39,10 +56,19 @@ class Atom:
         else:
             self.values = values
 
+    def get_func(self):
+        return self.func
+
+    def get_values(self):
+        return self.values
+
     def __repr__(self):
-        if len(self.values) > 0:
-            return f"{self.func}({', '.join(map(str, self.values))})"
-        return f"{self.func}{', '.join(map(str, self.values))}"
+        return f"{self.func}({', '.join(map(str, self.values))})"
+
+    def __eq__(self, other):
+        if not isinstance(other, Atom):
+            return False
+        return self.func == other.func and self.values == other.values
 
 
 class Formula:
@@ -52,9 +78,12 @@ class Formula:
 class AtomicFormula(Formula):
     def __init__(self, atom: Atom):
         self.atom = atom
-        
+
     def __repr__(self):
         return str(self.atom)
+
+    def __eq__(self, other):
+        return self.atom == other.atom
 
 
 class QuantifiedFormula(Formula):
@@ -76,6 +105,9 @@ class BinaryFormula(Formula):
     def __repr__(self):
         return f"({self.left} {self.connective.value} {self.right})"
 
+    def __eq__(self, other):
+        return self.left == other.left and self.connective == other.connective and self.right == other.right
+
 
 class NegativeFormula(Formula):
     def __init__(self, formula: Formula):
@@ -83,4 +115,6 @@ class NegativeFormula(Formula):
 
     def __repr__(self):
         return f"¬{self.formula}"
-    
+
+    def __eq__(self, other):
+        return self.formula == other.formula

@@ -6,6 +6,7 @@ from model2.types.base_types import *
 class Parser:
     def __init__(self):
         self.quantifiers = [quantifier.value for quantifier in Quantifiers]
+        variables.clear()
 
     def parse_input(self, input_data: Union[str, None]):
         if input_data is None:
@@ -51,6 +52,7 @@ class Parser:
                         if token_type == 'IDENTIFIER':
                             if re.match(r'^[a-z]+', value):
                                 actual_type = 'VARIABLE'
+                                variables.append(value)
                             else:
                                 actual_type = 'FUNCTION'
                         else:
@@ -139,7 +141,7 @@ class Parser:
 
         for token in polish_notation:
             if token['type'] in ['CONSTANT', 'VARIABLE']:
-                stack.append(AtomicFormula(Atom(token['value'], [])))
+                stack.append(token['value'])
             elif token['type'] == 'FUNCTION':
                 args = []
                 for _ in range(token['args']):
