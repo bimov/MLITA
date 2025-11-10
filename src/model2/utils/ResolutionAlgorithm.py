@@ -1,6 +1,6 @@
 from model2.types.base_types import *
+from model2.utils.Unificator import Unificator
 from model2.utils.FullConverter import FullConverter
-#from model2.utils.UnificationAlgorithm import UnificationAlgorithm
 from typing import List, Set, Tuple, Optional, Dict
 import logging
 
@@ -10,7 +10,7 @@ class ResolutionAlgorithm:
     def __init__(self):
         """Инициализация алгоритма резолюции"""
         self.full_converter = FullConverter()
-        self.unification = UnificationAlgorithm()
+        self.unification = Unificator()
     
     def resolve(self, clauses: List[Formula], goal: Formula) -> bool:
         """
@@ -41,32 +41,40 @@ class ResolutionAlgorithm:
         for i, clause in enumerate(all_clauses, 1):
             logger.info(f"  Клауза {i}: {clause}")
         
-        # Множество всех клауз (для отслеживания уникальности)
-        clause_set = set()
+        # Используем список вместо множества для хранения уникальных клауз
+        clause_strings = set()
+        unique_clauses = []
+        
         for clause in all_clauses:
-            clause_set.add(self._clause_to_string(clause))
+            clause_str = self._clause_to_string(clause)
+            if clause_str not in clause_strings:
+                clause_strings.add(clause_str)
+                unique_clauses.append(clause)
+        
+        all_clauses = unique_clauses
         
         # Множество уже проверенных пар клауз
         checked_pairs: Set[Tuple[str, str]] = set()
         
         iteration = 0
-        max_iterations = 1000
+        max_iterations = 100
         
         logger.info("\n" + "=" * 60)
         logger.info("НАЧАЛО ИТЕРАЦИЙ РЕЗОЛЮЦИИ")
         logger.info("=" * 60)
         
-        while iteration < max_iterations:
+        while iteration < max_iterations and all_clauses:
             iteration += 1
             logger.info(f"\n--- Итерация {iteration} ---")
+            logger.info(f"Текущее количество клауз: {len(all_clauses)}")
             
             new_clauses_found = False
-            clauses_list = list(all_clauses)
+            new_clauses = []
             
-            for i, clause1 in enumerate(clauses_list):
-                for j, clause2 in enumerate(clauses_list):
-                    if i >= j:
-                        continue
+            for i in range(len(all_clauses)):
+                for j in range(i + 1, len(all_clauses)):
+                    clause1 = all_clauses[i]
+                    clause2 = all_clauses[j]
                     
                     key1 = self._clause_to_string(clause1)
                     key2 = self._clause_to_string(clause2)
@@ -108,9 +116,9 @@ class ResolutionAlgorithm:
                             
                             new_clause_str = self._clause_to_string(new_clause)
                             
-                            if new_clause_str not in clause_set:
-                                clause_set.add(new_clause_str)
-                                all_clauses.append(new_clause)
+                            if new_clause_str not in clause_strings:
+                                clause_strings.add(new_clause_str)
+                                new_clauses.append(new_clause)
                                 new_clauses_found = True
                                 if substitution:
                                     logger.info(f"  ✓ Новая резольвента: {new_clause} (подстановка: {substitution})")
@@ -121,7 +129,11 @@ class ResolutionAlgorithm:
                     else:
                         logger.info(f"  ✗ Комплементарных пар не найдено")
             
-            if not new_clauses_found:
+            # Добавляем новые клаузы к основному списку
+            if new_clauses_found:
+                all_clauses.extend(new_clauses)
+                logger.info(f"\nДобавлено новых клауз: {len(new_clauses)}")
+            else:
                 logger.info(f"\nНовых резольвент не найдено на итерации {iteration}")
                 logger.info("Алгоритм завершается")
                 break
@@ -143,14 +155,17 @@ class ResolutionAlgorithm:
         """
         resolvents = []
         
-        for lit1 in literals1:
-            for lit2 in literals2:
+        for i, lit1 in enumerate(literals1):
+            for j, lit2 in enumerate(literals2):
                 # Проверяем, являются ли литералы комплементарными с унификацией
                 substitution = self._are_complementary_with_unification(lit1, lit2)
                 if substitution is not None:
+                    logger.info(f"  Найдена комплементарная пара: {lit1} и {lit2}")
+                    logger.info(f"  Подстановка: {substitution}")
+                    
                     # Создаем резольвенту без этих двух литералов
-                    new_literals1 = [l for l in literals1 if l != lit1]
-                    new_literals2 = [l for l in literals2 if l != lit2]
+                    new_literals1 = [l for k, l in enumerate(literals1) if k != i]
+                    new_literals2 = [l for k, l in enumerate(literals2) if k != j]
                     
                     # Объединяем оставшиеся литералы
                     combined_literals = new_literals1 + new_literals2
@@ -183,12 +198,14 @@ class ResolutionAlgorithm:
         # Случай 1: lit1 - отрицание, lit2 - атом
         if isinstance(lit1, NegativeFormula) and isinstance(lit2, AtomicFormula):
             if isinstance(lit1.formula, AtomicFormula):
-                return self.unification.unify_atoms(lit1.formula.atom, lit2.atom)
+                substitution = self.unification.unify_atoms(lit1.formula.atom, lit2.atom)
+                return substitution
         
         # Случай 2: lit1 - атом, lit2 - отрицание
         if isinstance(lit1, AtomicFormula) and isinstance(lit2, NegativeFormula):
             if isinstance(lit2.formula, AtomicFormula):
-                return self.unification.unify_atoms(lit1.atom, lit2.formula.atom)
+                substitution = self.unification.unify_atoms(lit1.atom, lit2.formula.atom)
+                return substitution
         
         return None
     
@@ -201,7 +218,7 @@ class ResolutionAlgorithm:
         
         if isinstance(formula, AtomicFormula):
             # Применяем подстановку к атому через алгоритм унификации
-            new_atom = self.unification.apply_substitution_to_atom(formula.atom, substitution)
+            new_atom = self.unification._apply_substitution_to_atom(formula.atom, substitution)
             return AtomicFormula(new_atom)
         
         elif isinstance(formula, NegativeFormula):
@@ -226,52 +243,73 @@ class ResolutionAlgorithm:
         else:
             return formula
 
-    # Остальные вспомогательные методы остаются без изменений
     def _formula_to_clauses(self, formula: Formula) -> List[Formula]:
+        """Преобразует формулу в список клауз (простое разбиение по AND)."""
+        clauses = []
+        
         if isinstance(formula, BinaryFormula) and formula.connective == LogicalConnectives.AND:
-            clauses = []
             clauses.extend(self._formula_to_clauses(formula.left))
             clauses.extend(self._formula_to_clauses(formula.right))
-            return clauses
         else:
-            return [formula]
+            clauses.append(formula)
+        
+        return clauses
     
     def _extract_literals(self, clause: Formula) -> List[Formula]:
+        """
+        Извлекает все литералы из клаузы.
+        Литерал - это атом или отрицание атома.
+        """
         literals = []
         
         if isinstance(clause, AtomicFormula):
+            # Атом - это литерал
             literals.append(clause)
         elif isinstance(clause, NegativeFormula):
+            # Отрицание атома - это литерал
             if isinstance(clause.formula, AtomicFormula):
                 literals.append(clause)
             else:
+                # Рекурсивно извлекаем из отрицания
                 literals.extend(self._extract_literals(clause.formula))
         elif isinstance(clause, BinaryFormula):
             if clause.connective == LogicalConnectives.OR:
+                # Дизъюнкция - извлекаем литералы из обеих частей
                 literals.extend(self._extract_literals(clause.left))
                 literals.extend(self._extract_literals(clause.right))
             else:
+                # Другие связки - считаем всю формулу одним литералом
                 literals.append(clause)
         else:
+            # Другие типы - считаем литералом
             literals.append(clause)
         
         return literals
     
     def _literals_to_clause(self, literals: List[Formula]) -> Optional[Formula]:
+        """
+        Преобразует список литералов в клаузу (дизъюнкцию).
+        Если список пуст, возвращает None (пустая клауза).
+        Если один литерал, возвращает его.
+        Иначе создает дизъюнкцию.
+        """
         if not literals:
             return None
         
         if len(literals) == 1:
             return literals[0]
         
-        result = literals[-1]
-        for i in range(len(literals) - 2, -1, -1):
-            result = BinaryFormula(literals[i], LogicalConnectives.OR, result)
+        # Создаем дизъюнкцию слева направо для лучшей читаемости
+        result = literals[0]
+        for i in range(1, len(literals)):
+            result = BinaryFormula(result, LogicalConnectives.OR, literals[i])
         
         return result
     
     def _clause_to_string(self, clause: Formula) -> str:
+        """Преобразует клаузу в строку для сравнения"""
         return str(clause)
     
     def _literal_to_string(self, literal: Formula) -> str:
+        """Преобразует литерал в строку для сравнения"""
         return str(literal)

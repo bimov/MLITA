@@ -31,6 +31,8 @@ class Quantifiers(Enum):
 class Variables:
     _variables = []
 
+    def __init__(self, variables: list[str]):
+        self._variables 
     @classmethod
     def append(cls, var: str):
         cls._variables.append(var)
@@ -44,7 +46,7 @@ class Variables:
         cls._variables = []
 
 
-variables = Variables()
+variables = Variables(["r", "s", "t", "u", "v", "w", "x", "y", "z"])
 
 
 class Atom:

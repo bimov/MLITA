@@ -3,6 +3,9 @@ from model2.utils.PNFConverter import PNFConverter
 from model2.utils.SNFConverter import SNFConverter
 from model2.utils.CNFConverter import CNFConverter
 from typing import List, Tuple
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class FullConverter:
@@ -15,19 +18,19 @@ class FullConverter:
         """Полное преобразование в множество дизъюнктов"""
         # 1. ПНФ
         pnf = self.pnf_converter.to_pnf(formula)
-        print("После ПНФ:", pnf)
+        logger.info("После ПНФ: %s", pnf)
         
         # 2. Сколемизация
         skolemized = self.skolem_converter.to_skolem(pnf)
-        print("После сколемизации:", skolemized)
+        logger.info("После сколемизации: %s", skolemized)
         
         # 3. Удаление кванторов всеобщности
         no_quantifiers = self.skolem_converter.remove_universal_quantifiers(skolemized)
-        print("После удаления кванторов:", no_quantifiers)
+        logger.info("После удаления кванторов: %s", no_quantifiers)
         
         # 4. КНФ
         cnf = self.cnf_converter.to_cnf(no_quantifiers)
-        print("После КНФ:", cnf)
+        logger.info("После КНФ: %s", cnf)
         
         # 5. Разбиение на дизъюнкты
         return self.split_into_clauses(cnf)
