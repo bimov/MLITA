@@ -86,6 +86,5 @@ def run_tests():
         except Exception as e:
             print(f"Ошибка: {e}")
 
-# ==== Точка входа ====
 if __name__ == "__main__":
     run_tests()

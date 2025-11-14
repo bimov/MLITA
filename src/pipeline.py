@@ -6,41 +6,36 @@ from io import StringIO
 from typing import Dict, List, Tuple
 
 from model1.LLMFormalizer import convert_to_predicate_logic
-from model1.OpenRouterChat import send_message
 from model2.types.BaseTypes import Formula
 from model2.utils.Parser import Parser
 from model2.utils.ResolutionAlgorithm import ResolutionAlgorithm
+from model3.LLMExplainer import explain_proof
 
-
-EXPLANATION_SYSTEM_PROMPT = (
-    "Ты — учитель логики. Объясни доказательство, представленное в виде последовательности "
-    "логических шагов, как если бы ты объяснял его студенту. Будь последовательным и ясным. "
-    "Используй естественный русский язык."
-)
 
 DEFAULT_TASK = "Сократ — человек. Все люди смертны. Докажи, что Сократ смертен."
 
 
 def run_pipeline(user_text: str) -> Dict[str, object]:
-    """Runs the two-stage reasoning pipeline and returns all intermediate artifacts."""
+    """Запускает полный логический пайплайн (Модуль 1 → Модуль 2 → Модуль 3)."""
 
+    # === Модуль 1: формализация ===
     formalized = convert_to_predicate_logic(user_text)
 
     parser = Parser()
     parsed_formulas = parser.parse_input(formalized)
     clauses, goal = _split_premises_and_goal(parsed_formulas)
 
+    # === Модуль 2: резолюция ===
     resolver = ResolutionAlgorithm()
     proved, resolution_log = _run_resolution_with_logs(resolver, clauses, goal)
 
-    explanation_prompt = _build_explanation_prompt(
+    # === Модуль 3: объяснение (LLM) ===
+    explanation_md = explain_proof(
         user_text=user_text,
         formalized=formalized,
         log=resolution_log,
         proved=proved,
     )
-
-    explanation = send_message(explanation_prompt, system_prompt=EXPLANATION_SYSTEM_PROMPT)
 
     return {
         "input": user_text,
@@ -49,7 +44,7 @@ def run_pipeline(user_text: str) -> Dict[str, object]:
         "goal": goal,
         "proved": proved,
         "logs": resolution_log,
-        "explanation": explanation,
+        "explanation": explanation_md,
     }
 
 
@@ -87,23 +82,8 @@ def _run_resolution_with_logs(
     return proved, log_stream.getvalue().strip()
 
 
-def _build_explanation_prompt(*, user_text: str, formalized: str, log: str, proved: bool) -> str:
-    status_line = "Доказательство завершилось успехом." if proved else "Доказательство не удалось завершить."
-    log_text = log or "Лог алгоритма пуст."
-    return (
-        "Исходная задача:\n"
-        f"{user_text}\n\n"
-        "Формулы (выход Модуля 1):\n"
-        f"{formalized}\n\n"
-        f"{status_line}\n"
-        "Журнал работы алгоритма резолюции:\n"
-        f"{log_text}\n\n"
-        "Поясни ход рассуждений и сделай вывод."
-    )
-
-
 def _build_argument_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="End-to-end логический пайплайн")
+    parser = argparse.ArgumentParser()
     parser.add_argument(
         "text",
         nargs="?",
@@ -129,8 +109,16 @@ def main() -> None:
     print("ДОКАЗАНО" if result["proved"] else "НЕ ДОКАЗАНО")
     print()
 
-    print("=== Объяснение (LLM) ===")
+    print("=== Объяснение (Модуль 3, Markdown) ===")
     print(result["explanation"])
+    print()
+
+    try:
+        with open("explanation.md", "w", encoding="utf-8") as f:
+            f.write(str(result["explanation"]))
+        print("Объяснение также сохранено в файл: explanation.md")
+    except Exception as e:
+        print(f"Не удалось сохранить explanation.md: {e}")
 
 
 if __name__ == "__main__":
