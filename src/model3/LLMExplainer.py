@@ -4,15 +4,8 @@ from model1.OpenRouterChat import send_message
 from model3.promts import EXPLANATION_SYSTEM_PROMPT, build_explanation_prompt
 
 
-def explain_proof(
-    *,
-    user_text: str,
-    formalized: str,
-    log: str,
-    proved: bool,
-) -> str:
+def explain_proof(*, user_text: str, formalized: str, log: str, proved: bool,) -> str:
     """
-    Модуль 3: LLM-объяснятор.
     Принимает исходный текст задачи, формализацию, лог резолюции и статус доказательства,
     а возвращает красивое объяснение в формате Markdown.
     """

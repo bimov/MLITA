@@ -43,15 +43,9 @@ EXPLANATION_SYSTEM_PROMPT = """
 """
 
 
-def build_explanation_prompt(
-    *,
-    user_text: str,
-    formalized: str,
-    log: str,
-    proved: bool,
-) -> str:
+def build_explanation_prompt(*, user_text: str, formalized: str, log: str, proved: bool,) -> str:
     """
-    Строит текст пользовательского промпта для LLM-объяснятора (Модуль 3).
+    Строит текст пользовательского промпта для LLM-объяснятора.
     """
     status_line = (
         "Доказательство завершилось успехом (формула доказана)."
