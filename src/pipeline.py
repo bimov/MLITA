@@ -97,21 +97,34 @@ def main() -> None:
     args = _build_argument_parser().parse_args()
     result = run_pipeline(args.text)
 
-    print("=== Формализация (Модуль 1) ===")
-    print(result["formalized"])
-    print()
+    lines: List[str] = []
 
-    print("=== Логи резолюции (Модуль 2) ===")
-    print(result["logs"])
-    print()
+    lines.append("=== Формализация (Модуль 1) ===")
+    lines.append(str(result["formalized"]))
+    lines.append("")
 
-    print("=== Статус доказательства ===")
-    print("ДОКАЗАНО" if result["proved"] else "НЕ ДОКАЗАНО")
-    print()
+    lines.append("=== Логи резолюции (Модуль 2) ===")
+    lines.append(str(result["logs"]))
+    lines.append("")
 
-    print("=== Объяснение (Модуль 3, Markdown) ===")
-    print(result["explanation"])
-    print()
+    lines.append("=== Статус доказательства ===")
+    lines.append("ДОКАЗАНО" if result["proved"] else "НЕ ДОКАЗАНО")
+    lines.append("")
+
+    lines.append("=== Объяснение (Модуль 3) ===")
+    lines.append(str(result["explanation"]))
+    lines.append("")
+
+    full_output = "\n".join(lines)
+
+    print(full_output)
+
+    try:
+        with open("output.txt", "w", encoding="utf-8") as f:
+            f.write(full_output)
+        print("Полный вывод также сохранён в файл: output.txt")
+    except Exception as e:
+        print(f"Не удалось сохранить output.txt: {e}")
 
     try:
         with open("explanation.md", "w", encoding="utf-8") as f:
