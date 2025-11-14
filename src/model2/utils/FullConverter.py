@@ -1,7 +1,7 @@
-from model2.types.base_types import *
-from model2.utils.PNFConverter import PNFConverter
-from model2.utils.SNFConverter import SNFConverter
-from model2.utils.CNFConverter import CNFConverter
+from ..types.base_types import *
+from .PNFConverter import PNFConverter
+from .SNFConverter import SNFConverter
+from .CNFConverter import CNFConverter
 from typing import List, Tuple
 import logging
 

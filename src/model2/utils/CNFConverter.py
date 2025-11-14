@@ -1,4 +1,4 @@
-from model2.types.base_types import *
+from ..types.base_types import *
 from typing import List, Tuple
 
 class CNFConverter:

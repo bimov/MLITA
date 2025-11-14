@@ -1,5 +1,6 @@
 import logging
-import sys
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 # Настройка логирования
 root_logger = logging.getLogger()
@@ -13,9 +14,9 @@ handler.setLevel(logging.INFO)
 handler.setFormatter(logging.Formatter('%(message)s'))
 root_logger.addHandler(handler)
 
-from model2.types.base_types import *
-from model2.utils.ResolutionAlgorithm import ResolutionAlgorithm
-from model2.utils.FullConverter import FullConverter
+from ..types.base_types import *
+from ..utils.ResolutionAlgorithm import ResolutionAlgorithm
+from ..utils.FullConverter import FullConverter
 
 
 def test_resolution_complex_predicates():

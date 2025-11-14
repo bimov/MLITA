@@ -1,5 +1,5 @@
 from typing import Union
-from model2.types.base_types import *
+from ..types.base_types import *
 import logging
 
 class Unificator:

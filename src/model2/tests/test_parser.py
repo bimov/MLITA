@@ -1,4 +1,6 @@
-from model2.utils.Parser import *
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+from ..utils.Parser import *
 
 
 def test1():

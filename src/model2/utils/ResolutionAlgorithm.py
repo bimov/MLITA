@@ -1,6 +1,6 @@
-from model2.types.base_types import *
-from model2.utils.Unificator import Unificator
-from model2.utils.FullConverter import FullConverter
+from ..types.base_types import *
+from .Unificator import Unificator
+from .FullConverter import FullConverter
 from typing import List, Set, Tuple, Optional, Dict
 import logging
 
