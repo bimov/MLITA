@@ -1,4 +1,4 @@
-from ..types.base_types import *
+from ..types.BaseTypes import *
 from .Unificator import Unificator
 from .FullConverter import FullConverter
 from typing import List, Set, Tuple, Optional, Dict

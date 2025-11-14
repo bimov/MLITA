@@ -1,6 +1,6 @@
 from typing import Union
 import re
-from ..types.base_types import *
+from ..types.BaseTypes import *
 
 
 class Parser:
