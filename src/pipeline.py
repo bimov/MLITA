@@ -1,5 +1,21 @@
 from __future__ import annotations
 
+import os
+import sys
+
+# По хорошему отдельно каждому файлу указывать, с какой директорией работать, 
+# но здесь это применимо, так как все файлы работают в директории с запускаемым скриптом
+def setup_dir():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    os.chdir(script_dir)
+    if script_dir not in sys.path:
+        sys.path.insert(0, script_dir)
+
+
+setup_dir()
+
+
 import argparse
 import logging
 from io import StringIO
