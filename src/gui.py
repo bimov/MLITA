@@ -52,10 +52,10 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1000, 720)
         self.setWindowIcon(QIcon("images/icon.png") if Path("images/icon.png").exists() else QIcon())
 
-        self.green_dark = "#064d2e"
-        self.green_med = "#0a7f4f"
-        self.green_menu = "#043322"
-        self.front_purple = "#4B3152"
+        self.green_dark = "#0d1b2a"
+        self.green_med = "#1b4965"
+        self.green_menu = "#0a2540"
+        self.front_purple = "#162447"
 
         self.setup_palette()
         self.app_dialog_stylesheet = f"""
@@ -112,11 +112,11 @@ class MainWindow(QMainWindow):
         pal = self.palette()
         pal.setColor(QPalette.Window, QColor(self.green_dark))
         pal.setColor(QPalette.WindowText, Qt.white)
-        pal.setColor(QPalette.Base, QColor("#1C1C1C"))
+        pal.setColor(QPalette.Base, QColor("#0f1a27"))
         pal.setColor(QPalette.Text, Qt.white)
         pal.setColor(QPalette.Button, QColor(self.green_med))
         pal.setColor(QPalette.ButtonText, Qt.white)
-        pal.setColor(QPalette.Highlight, QColor("#9FFA37"))
+        pal.setColor(QPalette.Highlight, QColor("#4FC3F7"))
         self.setPalette(pal)
 
     def check_api_key(self):
@@ -202,7 +202,7 @@ class MainWindow(QMainWindow):
 
         self.assert_text = QTextEdit()
         self.assert_text.setPlaceholderText("Например: Все кошки являются животными. Мурка — кошка. Докажите, что Мурка — животное.")
-        self.assert_text.setFont(QFont("Arial", 16))  # крупный текст
+        self.assert_text.setFont(QFont("Arial", 16))
         self.assert_text.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.assert_text.setStyleSheet("QTextEdit{background:#141414; color:white; border:1px solid #3b3b3b; border-radius:8px; padding:10px; font-size:16px;}")
         layout.addWidget(self.assert_text, stretch=1)
@@ -287,7 +287,7 @@ class MainWindow(QMainWindow):
         elif state == "assert":
             self.stack.setCurrentIndex(self.page_assert_index)
             if self.check_api_key():
-                self.status_label.setText("Ключ к ИИ успешно загружен из переменных окружения")
+                self.status_label.setText("Ключ к ИИ успешно загружен из переменного окружения")
             else:
                 self.status_label.setText("")
         elif state == "result":
