@@ -1,4 +1,4 @@
-from ..types.base_types import *
+from ..types.BaseTypes import *
 from .PNFConverter import PNFConverter
 from .SNFConverter import SNFConverter
 from .CNFConverter import CNFConverter

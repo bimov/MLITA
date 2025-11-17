@@ -1,6 +1,6 @@
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-from ..types.base_types import *
+from ..types.BaseTypes import *
 from ..utils.FullConverter import FullConverter
 
 def test_full_conversion_simple():

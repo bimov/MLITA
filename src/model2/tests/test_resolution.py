@@ -14,7 +14,7 @@ handler.setLevel(logging.INFO)
 handler.setFormatter(logging.Formatter('%(message)s'))
 root_logger.addHandler(handler)
 
-from ..types.base_types import *
+from ..types.BaseTypes import *
 from ..utils.ResolutionAlgorithm import ResolutionAlgorithm
 from ..utils.FullConverter import FullConverter
 

@@ -1,4 +1,4 @@
-from ..types.base_types import *
+from ..types.BaseTypes import *
 from typing import List, Tuple
 
 class SNFConverter:

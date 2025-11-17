@@ -1,6 +1,6 @@
 from openai import OpenAI
 import os
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 DEFAULT_MODEL = "tngtech/deepseek-r1t2-chimera:free"
 DEFAULT_HEADERS: Dict[str, str] = {
@@ -19,15 +19,19 @@ class OpenRouterChat:
         self.model = model
         self.extra_headers = extra_headers or DEFAULT_HEADERS
 
-    def send(self, content: str) -> str:
+    def send(self, content: str, system_prompt: Optional[str] = None) -> str:
+        messages: List[Dict[str, str]] = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": content})
         completion = self.client.chat.completions.create(
             model=self.model,
-            messages=[{"role": "user", "content": content}],
+            messages=messages,
             extra_headers=self.extra_headers,
             extra_body={},
         )
         return completion.choices[0].message.content
 
 
-def send_message(content: str, model: str = DEFAULT_MODEL) -> str:
-    return OpenRouterChat(model=model).send(content)
+def send_message(content: str, model: str = DEFAULT_MODEL, system_prompt: Optional[str] = None) -> str:
+    return OpenRouterChat(model=model).send(content, system_prompt=system_prompt)
