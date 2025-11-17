@@ -29,22 +29,18 @@ class Quantifiers(Enum):
 
 
 class Variables:
-    _variables = []
-
     def __init__(self, variables: list[str]):
-        self._variables 
-    @classmethod
-    def append(cls, var: str):
-        cls._variables.append(var)
+        self._variables = list(variables)
 
-    @classmethod
-    def __contains__(cls, var: str):
-        return var in cls._variables
+    def append(self, var: str):
+        self._variables.append(var)
 
-    @classmethod
-    def clear(cls):
-        cls._variables = []
+    def __contains__(self, var: str):
+        return var in self._variables
 
+    def clear(self):
+        self._variables = []
+        
 
 variables = Variables(["r", "s", "t", "u", "v", "w", "x", "y", "z"])
 
