@@ -1,6 +1,7 @@
 from openai import OpenAI
 import os
 from typing import Optional, Dict, List
+from dotenv import load_dotenv
 
 DEFAULT_MODEL = "tngtech/deepseek-r1t2-chimera:free"
 DEFAULT_HEADERS: Dict[str, str] = {
@@ -11,9 +12,10 @@ DEFAULT_HEADERS: Dict[str, str] = {
 class OpenRouterChat:
     def __init__(self, api_key: Optional[str] = None, model: str = DEFAULT_MODEL,
                  base_url: str = "https://openrouter.ai/api/v1", extra_headers: Optional[Dict[str, str]] = None,) -> None:
+        load_dotenv(override=True)
         api_key = api_key or os.environ.get("OPENROUTER_API_KEY")
         if not api_key:
-            raise RuntimeError("Укажите OPENROUTER_API_KEY в окружении или передайте api_key в конструктор.")
+            raise RuntimeError("Укажите OPENROUTER_API_KEY в окружении или в файле .env либо передайте api_key в конструктор.")
 
         self.client = OpenAI(base_url=base_url, api_key=api_key)
         self.model = model
