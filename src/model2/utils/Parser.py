@@ -106,7 +106,7 @@ class Parser:
         for i in indexes:
             value = i['value']
             if value[0] in self.quantifiers:
-                self.__pop_other(stack, write_notation, 5)
+                self.__pop_other(stack, write_notation, 7)
                 stack.append((i, 5))
             elif value in first_lvl:
                 self.__pop_other(stack, write_notation, 1)
@@ -121,10 +121,10 @@ class Parser:
                 self.__pop_other(stack, write_notation, 4)
                 stack.append((i, 4))
             elif value in fifth_lvl:
-                self.__pop_other(stack, write_notation, 4)
+                self.__pop_other(stack, write_notation, 5)
                 stack.append((i, 5))
             elif value in sixth_lvl:
-                self.__pop_other(stack, write_notation, 4)
+                self.__pop_other(stack, write_notation, 6)
                 stack.append((i, 6))
             elif value in bracket:
                 if value == '(':
@@ -135,8 +135,8 @@ class Parser:
                 if i['type'] == 'COMMA':
                     continue
                 if i['type'] == 'FUNCTION':
-                    self.__pop_other(stack, write_notation, 6)
-                    stack.append((i, 6))
+                    self.__pop_other(stack, write_notation, 8)
+                    stack.append((i, 8))
                 else:
                     write_notation.append(i)
 

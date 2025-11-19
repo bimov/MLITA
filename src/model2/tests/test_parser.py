@@ -4,7 +4,7 @@ from ..utils.Parser import *
 
 
 def test1():
-    data = 'Человек(Сократ)'
+    data = 'Человек(Сократ), ¬Человек(x) ∨ Смертен(x), Смертен(Сократ)'
     parser = Parser()
     result = parser.parse_input(data)
     print(f'Вход: {data}')
