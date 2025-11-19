@@ -240,9 +240,9 @@ class MainWindow(QMainWindow):
         combined_layout.addWidget(self.shown_assert_label)
 
         self.result_browser = QTextBrowser()
-        self.result_browser.setFont(QFont("Arial", 14))
+        self.result_browser.setFont(QFont("Segoe UI", 14))
         self.result_browser.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.result_browser.setStyleSheet("QTextBrowser{background:#141414; color:white; border:1px solid #3b3b3b; border-radius:8px; padding:10px; font-size:14px;}")
+        self.result_browser.setStyleSheet("QTextBrowser{background:#141414; color:white; border:1px solid #3b3b3b; border-radius:8px; padding:10px; font-size:18px;}")
         self.result_browser.setOpenExternalLinks(True)
         combined_layout.addWidget(self.result_browser, stretch=1)
 
