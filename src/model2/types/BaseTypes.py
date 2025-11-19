@@ -54,7 +54,7 @@ class Atom:
         else:
             self.values = values
 
-    def is_costant(self) -> bool:
+    def is_constant(self) -> bool:
         global variables
         if (isinstance(self.values, str)):
             return (self.values not in variables)
@@ -70,7 +70,7 @@ class Atom:
         if (isinstance(value, str)):
             return (value not in variables)
         if (isinstance(value, Atom)):
-            return value.is_costant()
+            return value.is_constant()
     
     def get_func(self):
         return self.func
@@ -85,6 +85,15 @@ class Atom:
         if not isinstance(other, Atom):
             return False
         return self.func == other.func and self.values == other.values
+
+    def __hash__(self) -> int:
+        def make_hashable(values):
+            if isinstance(values, list):
+                return tuple(hash(value) for value in values)
+            else:
+                return values
+        
+        return hash((self.func, make_hashable(self.values)))
 
 
 class Formula:
