@@ -30,7 +30,7 @@ class Parser:
         patterns = [
             (r'∀[a-z][a-z0-9]*|∃[a-z][a-z0-9]*', 'QUANTIFIER'),
             (r'→|¬|∧|∨', 'OPERATOR'),
-            (r'[A-Za-zА-Яа-я][A-Za-zА-Яа-я0-9_]*', 'IDENTIFIER'),
+            (r'[A-Za-zА-Яа-яЁё][A-Za-zА-Яа-яЁё0-9_]*', 'IDENTIFIER'),
             (r'\(', 'LPAREN'),
             (r'\)', 'RPAREN'),
             (r';', 'COMMA'),
