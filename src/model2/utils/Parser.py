@@ -29,7 +29,7 @@ class Parser:
 
         patterns = [
             (r'∀[a-z][a-z0-9]*|∃[a-z][a-z0-9]*', 'QUANTIFIER'),
-            (r'→|¬|∧|∨', 'OPERATOR'),
+            (r'→|¬|∧|∨|↔|⊕', 'OPERATOR'),
             (r'[A-Za-zА-Яа-яЁё][A-Za-zА-Яа-яЁё0-9_]*', 'IDENTIFIER'),
             (r'\(', 'LPAREN'),
             (r'\)', 'RPAREN'),
@@ -94,10 +94,12 @@ class Parser:
 
     def __create_polish_notation(self, indexes: list[str]):
         stack = []
-        first_lvl = [LogicalConnectives.THEN.value]
-        second_lvl = [LogicalConnectives.OR.value]
-        third_lvl = [LogicalConnectives.AND.value]
-        fourth_lvl = ['¬']
+        first_lvl = [LogicalConnectives.IFF.value]    # ↔
+        second_lvl = [LogicalConnectives.THEN.value]          # →
+        third_lvl = [LogicalConnectives.OR.value]             # ∨
+        fourth_lvl = [LogicalConnectives.XOR.value]           # ⊕
+        fifth_lvl = [LogicalConnectives.AND.value]            # ∧
+        sixth_lvl = ['¬']
         write_notation = []
         bracket = ['(', ')']
 
@@ -118,6 +120,12 @@ class Parser:
             elif value in fourth_lvl:
                 self.__pop_other(stack, write_notation, 4)
                 stack.append((i, 4))
+            elif value in fifth_lvl:
+                self.__pop_other(stack, write_notation, 4)
+                stack.append((i, 5))
+            elif value in sixth_lvl:
+                self.__pop_other(stack, write_notation, 4)
+                stack.append((i, 6))
             elif value in bracket:
                 if value == '(':
                     stack.append((i, 0))
