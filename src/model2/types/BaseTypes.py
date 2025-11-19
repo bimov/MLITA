@@ -41,7 +41,7 @@ class Variables:
     def clear(self):
         self._variables = []
         
-
+global variables
 variables = Variables(["r", "s", "t", "u", "v", "w", "x", "y", "z"])
 
 
@@ -54,6 +54,24 @@ class Atom:
         else:
             self.values = values
 
+    def is_costant(self) -> bool:
+        global variables
+        if (isinstance(self.values, str)):
+            return (self.values not in variables)
+        elif (isinstance(self.values, list)):
+            for i in self.values:
+                if not self._check_constant(i):
+                    return False
+        return True
+                
+    
+    def _check_constant(self, value: Union[str, 'Atom']) -> bool:
+        global variables
+        if (isinstance(value, str)):
+            return (value not in variables)
+        if (isinstance(value, Atom)):
+            return value.is_costant()
+    
     def get_func(self):
         return self.func
 

@@ -313,12 +313,6 @@ class ResolutionAlgorithm:
         result = unique_literals[0]
         for i in range(1, len(unique_literals)):
             result = BinaryFormula(result, LogicalConnectives.OR, unique_literals[i])
-            
-        
-        # Создаем дизъюнкцию слева направо для лучшей читаемости
-        result = literals[0]
-        for i in range(1, len(literals)):
-            result = BinaryFormula(result, LogicalConnectives.OR, literals[i])
         
         return result
     

@@ -6,16 +6,9 @@ class CNFConverter:
         pass
     
     def to_cnf(self, formula: Formula) -> Formula:
-        """Преобразует матрицу формулы в КНФ (без кванторов)"""
-        if isinstance(formula, QuantifiedFormula):
-            # Для кванторных формул преобразуем только внутреннюю часть
-            return QuantifiedFormula(
-                formula.quantifier,
-                formula.variable,
-                self.to_cnf(formula.formula)
-            )
-        
-        elif isinstance(formula, BinaryFormula):
+        """Преобразует формулы в КНФ (без кванторов)"""
+
+        if isinstance(formula, BinaryFormula):
             if formula.connective == LogicalConnectives.AND:
                 # Рекурсивно применяем к обеим частям конъюнкции
                 return BinaryFormula(

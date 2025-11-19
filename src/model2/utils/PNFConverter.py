@@ -217,7 +217,7 @@ class PNFConverter:
         return []
     
     def remove_quantifiers(self, formula: Formula) -> Formula:
-        """Удаление кванторов из формулы (оставляет матрицу)"""
+        """Удаление кванторов из формулы"""
         if isinstance(formula, QuantifiedFormula):
             return self.remove_quantifiers(formula.formula)
         return formula

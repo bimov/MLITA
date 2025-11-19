@@ -59,18 +59,17 @@ class SNFConverter:
         else:
             return formula
     
-    def create_skolem_term(self) -> str:
+    def create_skolem_term(self) -> Union[str, Atom]:
         """Создает сколемовский терм"""
         self.skolem_counter += 1
         if self.quantifiers:
             # Если есть универсальные кванторы, создаем функцию f(x, y, ...)
-            args = "_".join(self.quantifiers)
-            return f"f{self.skolem_counter}({args})"
+            return Atom(f"f{self.skolem_counter}", self.quantifiers.copy())
         else:
             # Иначе создаем константу
             return f"c{self.skolem_counter}"
     
-    def substitute_variable(self, formula: Formula, variable: str, replacement: str) -> Formula:
+    def substitute_variable(self, formula: Formula, variable: str, replacement: Union[str, Atom]) -> Formula:
         """Заменяет переменную в формуле"""
         if isinstance(formula, AtomicFormula):
             new_values = [replacement if arg == variable else arg for arg in formula.atom.values]
