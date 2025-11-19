@@ -68,7 +68,7 @@ class ResolutionAlgorithm:
         logger.info("НАЧАЛО ИТЕРАЦИЙ РЕЗОЛЮЦИИ")
         logger.info("=" * 60)
         
-        while iteration < max_iterations and all_clauses:
+        while iteration < max_iterations:
             iteration += 1
             logger.info(f"\n--- Итерация {iteration} ---")
             logger.info(f"Текущее количество клауз: {len(all_clauses)}")
@@ -100,36 +100,35 @@ class ResolutionAlgorithm:
                     logger.info(f"  Литералы клаузы 2: {[str(l) for l in literals2]}")
                     
                     # Ищем комплементарные пары с подстановками
-                    resolvents = self._find_resolvents(literals1, literals2)
+                    result = self._find_resolvents(literals1, literals2)
                     
-                    if resolvents:
-                        for resolvent_literals, substitution in resolvents:
-                            # Создаем новую клаузу из оставшихся литералов
-                            try:
-                                new_clause = self._literals_to_clause(resolvent_literals)
-                                new_clause_str = self._clause_to_string(new_clause)
-                                if new_clause_str not in clause_strings:
-                                    clause_strings.add(new_clause_str)
-                                    new_clauses.append(new_clause)
-                                    if substitution:
-                                        logger.info(f"  ✓ Новая резольвента: {new_clause} (подстановка: {substitution})")
-                                    else:
-                                        logger.info(f"  ✓ Новая резольвента: {new_clause}")
+                    if result:
+                        resolvent_literals, substitution = result 
+                        try:
+                            new_clause = self._literals_to_clause(resolvent_literals)
+                            new_clause_str = self._clause_to_string(new_clause)
+                            if new_clause_str not in clause_strings:
+                                clause_strings.add(new_clause_str)
+                                new_clauses.append(new_clause)
+                                if substitution:
+                                    logger.info(f"  ✓ Новая резольвента: {new_clause} (подстановка: {substitution})")
                                 else:
-                                    logger.info(f"  ✗ Резольвента уже существует: {new_clause}")
-                            except Exception as e:
-                                error_message = str(e)
-                                if error_message == "TAUTOLOGY":
-                                    continue
-                                elif error_message == "EMPTY CLAUSE":
-                                    # Пустая клауза - противоречие найдено!
-                                    if substitution:
-                                        logger.info(f"  Подстановка: {substitution}")
-                                    logger.info("\n" + "!" * 60)
-                                    logger.info("НАЙДЕНА ПУСТАЯ КЛАУЗА - ПРОТИВОРЕЧИЕ!")
-                                    logger.info("ФОРМУЛА ДОКАЗАНА!")
-                                    logger.info("!" * 60)
-                                    return True
+                                    logger.info(f"  ✓ Новая резольвента: {new_clause}")
+                            else:
+                                logger.info(f"  ✗ Резольвента уже существует: {new_clause}")
+                        except Exception as e:
+                            error_message = str(e)
+                            if error_message == "TAUTOLOGY":
+                                continue
+                            elif error_message == "EMPTY CLAUSE":
+                                # Пустая клауза - противоречие найдено!
+                                if substitution:
+                                    logger.info(f"  Подстановка: {substitution}")
+                                logger.info("\n" + "!" * 60)
+                                logger.info("НАЙДЕНА ПУСТАЯ КЛАУЗА - ПРОТИВОРЕЧИЕ!")
+                                logger.info("ФОРМУЛА ДОКАЗАНА!")
+                                logger.info("!" * 60)
+                                return True
                     else:
                         logger.info(f"  ✗ Комплементарных пар не найдено")
             
@@ -149,10 +148,9 @@ class ResolutionAlgorithm:
         logger.info(f"Всего клауз: {len(all_clauses)}")
         logger.info("ФОРМУЛА НЕ ДОКАЗАНА")
         logger.info("=" * 60)
-        
         return False
     
-    def _find_resolvents(self, literals1: List[Formula], literals2: List[Formula]) -> List[Tuple[List[Formula], Dict[str, str]]]:
+    def _find_resolvents(self, literals1: List[Formula], literals2: List[Formula]) -> Optional[Tuple[List[Formula], Dict[str, str]]]:
         """
         Находит все возможные резольвенты между двумя списками литералов.
         Использует алгоритм унификации.
@@ -190,10 +188,8 @@ class ResolutionAlgorithm:
                         if lit_str not in seen:
                             seen.add(lit_str)
                             unique_literals.append(lit)
-                    
-                    resolvents.append((unique_literals, substitution))
-        
-        return resolvents
+                    return unique_literals, substitution # достаточно найти одну резольвенту
+        return None
     
     def _are_complementary_with_unification(self, lit1: Formula, lit2: Formula) -> Optional[Dict[str, str]]:
         """
@@ -298,7 +294,7 @@ class ResolutionAlgorithm:
             lit1 = literals[i]
             for j in range(i + 1, len(literals)):
                 lit2 = literals[j]
-                if self._are_complementary_direct(lit1, lit2):
+                if self._are_complementary_with_unification(lit1, lit2):
                     logger.info(f"  Обнаружена тавтология: {lit1} и {lit2} комплементарны")
                     raise Exception("TAUTOLOGY")
         
@@ -333,20 +329,3 @@ class ResolutionAlgorithm:
     def _literal_to_string(self, literal: Formula) -> str:
         """Преобразует литерал в строку для сравнения"""
         return str(literal)
-    
-    
-    def _are_complementary_direct(self, lit1: Formula, lit2: Formula) -> bool:
-        """
-        Проверяет, являются ли два литерала комплементарными после унификации.
-        """
-        # Случай 1: lit1 - отрицание, lit2 - атом
-        if isinstance(lit1, NegativeFormula) and isinstance(lit2, AtomicFormula):
-            if isinstance(lit1.formula, AtomicFormula):
-                return lit1.formula.atom == lit2.atom
-        
-        # Случай 2: lit1 - атом, lit2 - отрицание
-        if isinstance(lit1, AtomicFormula) and isinstance(lit2, NegativeFormula):
-            if isinstance(lit2.formula, AtomicFormula):
-                return lit1.atom == lit2.formula.atom
-        
-        return False
