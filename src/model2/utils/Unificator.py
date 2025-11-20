@@ -40,11 +40,12 @@ class Unificator:
                         logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
                         replaces[second_values[i]] = first_values[i]
                         second_values[i] = first_values[i]
+                    else:
+                        return None
                 else:
-                    if second_values[i] not in variables:
-                        logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
-                        replaces[first_values[i]] = second_values[i]
-                        first_values[i] = second_values[i]
+                    logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
+                    replaces[first_values[i]] = second_values[i]
+                    first_values[i] = second_values[i]
             else:
                 if isinstance(first_values[i], str):
                     if first_values[i] not in variables:
@@ -52,22 +53,34 @@ class Unificator:
                             logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
                             replaces[second_values[i]] = first_values[i]
                             second_values[i] = first_values[i]
+                        else:
+                            return None
                     else:
-                        if not second_values[i].is_constant():
+                        if second_values[i].is_constant():
                             logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
                             replaces[first_values[i]] = second_values[i]
                             first_values[i] = second_values[i]
+                        else:
+                            logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
+                            replaces[second_values[i]] = first_values[i]
+                            second_values[i] = first_values[i]
                 else:
                     if second_values[i] not in variables:
                         if not first_values[i].is_constant():
                             logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
                             replaces[first_values[i]] = second_values[i]
                             first_values[i] = second_values[i]
+                        else:
+                            return None
                     else:
-                        if not first_values[i].is_constant():
+                        if first_values[i].is_constant():
                             logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
                             replaces[second_values[i]] = first_values[i]
                             second_values[i] = first_values[i]
+                        else:
+                            logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
+                            replaces[first_values[i]] = second_values[i]
+                            first_values[i] = second_values[i]
 
         return first, second, replaces
 

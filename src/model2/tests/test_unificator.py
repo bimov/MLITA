@@ -23,10 +23,13 @@ def test1():
 
     result = unificator.unify_atoms(first, second)
 
-    new_first, new_second, replaces = result
-    print(f"Первый атом: {new_first}")
-    print(f"Второй атом: {new_second}")
-    print(f"Подстановки: {replaces}")
+    if not result is None:
+        new_first, new_second, replaces = result
+        print(f"Первый атом: {new_first}")
+        print(f"Второй атом: {new_second}")
+        print(f"Подстановки: {replaces}")
+    else:
+        print('Не уницицировано')
     print()
 
 
@@ -40,10 +43,13 @@ def test2():
 
     result = unificator.unify_atoms(first, second)
 
-    new_first, new_second, replaces = result
-    print(f"Первый атом: {new_first}")
-    print(f"Второй атом: {new_second}")
-    print(f"Подстановки: {replaces}")
+    if not result is None:
+        new_first, new_second, replaces = result
+        print(f"Первый атом: {new_first}")
+        print(f"Второй атом: {new_second}")
+        print(f"Подстановки: {replaces}")
+    else:
+        print('Не уницицировано')
     print()
 
 def test3():
@@ -58,10 +64,13 @@ def test3():
 
     result = unificator.unify_atoms(first, second)
 
-    new_first, new_second, replaces = result
-    print(f"Первый атом: {new_first}")
-    print(f"Второй атом: {new_second}")
-    print(f"Подстановки: {replaces}")
+    if not result is None:
+        new_first, new_second, replaces = result
+        print(f"Первый атом: {new_first}")
+        print(f"Второй атом: {new_second}")
+        print(f"Подстановки: {replaces}")
+    else:
+        print('Не уницицировано')
     print()
 
 def test4():
@@ -76,10 +85,13 @@ def test4():
 
     result = unificator.unify_formules(first, second)
 
-    new_first, new_second, replaces = result
-    print(f"Первая формула: {new_first}")
-    print(f"Вторая формула: {new_second}")
-    print(f"Подстановки: {replaces}")
+    if not result is None:
+        new_first, new_second, replaces = result
+        print(f"Первая формула: {new_first}")
+        print(f"Вторая формула: {new_second}")
+        print(f"Подстановки: {replaces}")
+    else:
+        print('Не уницицировано')
     print()
 
 def test5():
@@ -96,10 +108,13 @@ def test5():
 
     result = unificator.unify_formules(first, second)
 
-    new_first, new_second, replaces = result
-    print(f"Первая формула: {new_first}")
-    print(f"Вторая формула: {new_second}")
-    print(f"Подстановки: {replaces}")
+    if not result is None:
+        new_first, new_second, replaces = result
+        print(f"Первая формула: {new_first}")
+        print(f"Вторая формула: {new_second}")
+        print(f"Подстановки: {replaces}")
+    else:
+        print('Не уницицировано')
     print()
 
 def test6():
@@ -123,10 +138,13 @@ def test6():
 
     result = unificator.unify_formules(first, second)
 
-    new_first, new_second, replaces = result
-    print(f"Первая формула: {new_first}")
-    print(f"Вторая формула: {new_second}")
-    print(f"Подстановки: {replaces}")
+    if not result is None:
+        new_first, new_second, replaces = result
+        print(f"Первая формула: {new_first}")
+        print(f"Вторая формула: {new_second}")
+        print(f"Подстановки: {replaces}")
+    else:
+        print('Не уницицировано')
     print()
 
 def test7():
@@ -139,10 +157,14 @@ def test7():
 
     result = unificator.unify_atoms(first, second)
 
-    new_first, new_second, replaces = result
-    print(f"Первый атом: {new_first}")
-    print(f"Второй атом: {new_second}")
-    print(f"Подстановки: {replaces}")
+    if not result is None:
+        new_first, new_second, replaces = result
+        print(f"Первый атом: {new_first}")
+        print(f"Второй атом: {new_second}")
+        print(f"Подстановки: {replaces}")
+    else:
+        print('Не уницицировано')
+
     print()
 
 if __name__ == '__main__':
