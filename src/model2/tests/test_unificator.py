@@ -129,6 +129,22 @@ def test6():
     print(f"Подстановки: {replaces}")
     print()
 
+def test7():
+    first = Atom('Человек', 'Магелан')
+    second = Atom('Человек', 'Сократ')
+
+    variables.clear()
+    variables.append('x')
+    unificator = Unificator()
+
+    result = unificator.unify_atoms(first, second)
+
+    new_first, new_second, replaces = result
+    print(f"Первый атом: {new_first}")
+    print(f"Второй атом: {new_second}")
+    print(f"Подстановки: {replaces}")
+    print()
+
 if __name__ == '__main__':
     test1()
     test2()
@@ -136,3 +152,4 @@ if __name__ == '__main__':
     test4()
     test5()
     test6()
+    test7()

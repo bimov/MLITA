@@ -36,24 +36,7 @@ class Unificator:
                 first_values[i], second_values[i], replaces = self.unify_atoms(first_values[i], second_values[i])
             elif isinstance(first_values[i], str) and isinstance(second_values[i], str):
                 if first_values[i] not in variables:
-                    logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
-                    replaces[second_values[i]] = first_values[i]
-                    second_values[i] = first_values[i]
-                else:
-                    logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
-                    replaces[first_values[i]] = second_values[i]
-                    first_values[i] = second_values[i]
-            else:
-                if isinstance(first_values[i], str):
-                    if first_values[i] not in variables:
-                        logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
-                        replaces[second_values[i]] = first_values[i]
-                        second_values[i] = first_values[i]
-                    elif second_values[i].is_constant():
-                        logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
-                        replaces[first_values[i]] = second_values[i]
-                        first_values[i] = second_values[i]
-                    else:
+                    if second_values[i] in variables:
                         logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
                         replaces[second_values[i]] = first_values[i]
                         second_values[i] = first_values[i]
@@ -62,14 +45,29 @@ class Unificator:
                         logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
                         replaces[first_values[i]] = second_values[i]
                         first_values[i] = second_values[i]
-                    elif first_values[i].is_constant():
-                        logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
-                        replaces[second_values[i]] = first_values[i]
-                        second_values[i] = first_values[i]
+            else:
+                if isinstance(first_values[i], str):
+                    if first_values[i] not in variables:
+                        if not second_values[i].is_constant():
+                            logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
+                            replaces[second_values[i]] = first_values[i]
+                            second_values[i] = first_values[i]
                     else:
-                        logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
-                        replaces[first_values[i]] = second_values[i]
-                        first_values[i] = second_values[i]
+                        if not second_values[i].is_constant():
+                            logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
+                            replaces[first_values[i]] = second_values[i]
+                            first_values[i] = second_values[i]
+                else:
+                    if second_values[i] not in variables:
+                        if not first_values[i].is_constant():
+                            logging.info(f"[Унификация {first_values[i]}/{second_values[i]} в {first}]")
+                            replaces[first_values[i]] = second_values[i]
+                            first_values[i] = second_values[i]
+                    else:
+                        if not first_values[i].is_constant():
+                            logging.info(f"[Унификация {second_values[i]}/{first_values[i]} в {second}]")
+                            replaces[second_values[i]] = first_values[i]
+                            second_values[i] = first_values[i]
 
         return first, second, replaces
 
